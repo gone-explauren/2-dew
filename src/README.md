@@ -21,3 +21,7 @@
     * As a user, I want to ensure that only fellow users that are allowed to “update”, based on their user type, can mark To Do Items complete.
     * As a user, I want to ensure that only fellow users that are allowed to “delete”, based on their user type, can delete new To Do Items.
 
+## Phase Four
+
+* In Phase 4, we will finalize the functionality of the application by connecting to live servers for login, authorization, and data access.
+* To-Do List App Complete
