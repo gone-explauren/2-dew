@@ -1,27 +1,36 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Nav from './Components/NavBar/'
 import Todo from './Components/Todo';
-import LoginProvider from './Auth-Context/_context';
-import Auth from './Auth-Context/auth';
-import Login from './Auth-Context/login';
+import SettingsForm from './Components/SettingsForm';
+import SettingProvider from './Context/Settings';
+import LoginProvider from  './Context/Auth';
+import Auth from './Components/auth/Auth'
 
-export default class App extends React.Component {
-  render() {
+import './App.css';
+
+function App () {
+
     return (
+      <>
       <BrowserRouter>
-        <nav>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/settings">Settings</Link></li>
-            <li><Link to="/login">Login</Link></li>
-          </ul>
-        </nav>
-        <Routes>
-          <Route exact path="/" element={<Todo />} />
-          <Route path="/settings" element={<Todo />} />
-        </Routes>
-      </BrowserRouter >
+      <LoginProvider>
+        <div className='body-container'>
+        <Nav />
+        <Auth capability='read'>
+          <SettingProvider>
+            <Routes>
+            <Route path="/" element={<Todo />} />
+            <Route path="/settings" element={<SettingsForm />} />
+            </Routes>
+          </SettingProvider>
+        </Auth>
+          </div> 
+        </LoginProvider>
+      </BrowserRouter>
+      </>
     );
   }
-}
+
+export default App;

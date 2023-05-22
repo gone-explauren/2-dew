@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SettingProvider from '../../Context/Settings'
+import SettingProvider from '../../Context/'
 import Header from '../Header';
 import List from '../List';
 import Form from '../Form';
