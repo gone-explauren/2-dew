@@ -1,12 +1,14 @@
-import { useState } from 'react';
-import { createStyles, Navbar, Group, Code, getStylesRef, rem } from '@mantine/core';
+import React, { useContext } from 'react';
+import { When } from 'react-if';
+
+import { createStyles, Button, getStylesRef, rem } from '@mantine/core';
 import {
-  IconSettings,
-  IconHome,
+  IconLogout,
 } from '@tabler/icons-react';
 
-import Login from './../auth/Login'
-import './nav.scss'
+import { LoginContext } from '../../Context/Auth';
+import LoginModal from './LoginModal.jsx';
+import SignupModal from './SignupModal.jsx';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -63,45 +65,53 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const data = [
-  { link: '/', label: 'Home', icon: IconHome },
-  { link: '/settings', label: 'Settings', icon: IconSettings },
-];
-
-function NavBar() {
-  const { classes, cx } = useStyles();
-  const [active, setActive] = useState('Home');
-
+function Login(){
   
+  // eslint-disable-next-line
+  const { classes, cx } = useStyles();
 
-  const links = data.map((item) => (
-    <a
-      className={cx(classes.link, { [classes.linkActive]: item.label === active })}
-      href={item.link}
-      key={item.label}
-      onClick={(event) => {
-        setActive(item.label);
-      }}
-    >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </a>
-  ));
+  const {state, login, logout, signup} = useContext(LoginContext);
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [role, setRole] = React.useState('user');
 
-  return (
-    <Navbar height={'97vh'} width={{ sm: 300 }} position="fixed">
-      <Navbar.Section grow>
-        <Group className={classes.header} position="apart">
-          <Code sx={{ fontWeight: 700 }}>To-Do App</Code>
-        </Group>
-        {links}
-      </Navbar.Section>
+  const handleChange = (e) =>{
+    // console.log(e)
+    if (e.target.name === 'username'){
+      setUsername(e.target.value)
+    }
+    else if (e.target.name === 'password'){
+      setPassword(e.target.value)
+    }
+    // console.log(username, password)
+  }
 
-      <Navbar.Section className={classes.footer}>
-        <Login />
-      </Navbar.Section>
-    </Navbar>
-  );
-}
+  const handleSubmit = (e, callback) => {
+    e.preventDefault();
+    callback(username, password, role);
+  };
 
-export default NavBar;
+    return (
+      <>
+        <When condition={state.loggedIn}>
+        <Button onClick={logout} >
+          <IconLogout />
+          <span>Logout</span>
+          </Button>
+        </When>
+
+        <When condition={!state.loggedIn}>
+          <LoginModal 
+          handleChange={handleChange} handleSubmit={handleSubmit}
+          login={login} classes={classes} state={state}/>
+
+
+        <SignupModal 
+        signup={signup} classes={classes} handleChange={handleChange} handleSubmit={handleSubmit} setRole={setRole}
+        />
+        </When>
+      </>
+    );
+  }
+
+export default Login;
